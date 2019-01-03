@@ -1,6 +1,7 @@
     #include <bits/stdc++.h>
     //#define DEBUG_MODE
     #define SIM_MODE
+    //#define CHECK
     using namespace std;
 
     enum PlayStatus{
@@ -188,10 +189,15 @@ class Node{
                     Record[x][y]++; color[x][y] = input;
                     if(Record[x][y]==Max[x][y]){
                         status = Continue;
-                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-1)) if(color[x][y-1]==Blue) value += 50; else value -= 30;
-                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-1)) if(color[x][y+1]==Blue) value += 50; else value -= 30;
-                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-1)) if(color[x-1][y]==Blue) value += 50; else value -= 30;
-                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-1)) if(color[x-1][y]==Blue) value += 50; else value -= 30;
+                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-2)) if(color[x][y-1]==Blue) value += 50;
+                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-2)) if(color[x][y+1]==Blue) value += 50;
+                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-2)) if(color[x-1][y]==Blue) value += 50;
+                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-2)) if(color[x-1][y]==Blue) value += 50;
+
+                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-1)) if(color[x][y-1]==Blue) value += 30; else value -= 30;
+                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-1)) if(color[x][y+1]==Blue) value += 30; else value -= 30;
+                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-1)) if(color[x-1][y]==Blue) value += 30; else value -= 30;
+                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-1)) if(color[x-1][y]==Blue) value += 30; else value -= 30;
                     } else {
                         if(y>0) {
                             if(Record[x][y-1]==(Max[x][y-1]-1)) {
@@ -366,8 +372,14 @@ class Student{
                         t = clock();
                         tmpj = t % 6;
                     } while(color[tmpi][tmpj]!=White && color[tmpi][tmpj]!=inputColor);
+#ifndef CHECK
                     x = tmpi;
                     y = tmpj;
+#endif
+#ifdef CHECK
+                    cin >> x >> y;
+                    x--; y--;
+#endif
                 }
                 // Any Code You Want to Add
                 int getX(){
@@ -391,8 +403,8 @@ class Student{
         int Max[5][6] = {{2,3,3,3,3,2}, {3,4,4,4,4,3}, {3,4,4,4,4,3}, {3,4,4,4,4,3}, {2,3,3,3,3,2}};
         Color color[5][6] = {{White}};
         PlayStatus status = Done;
-        playerOne::Student student1;
-        playerTwo::Student student2;
+        playerTwo::Student student1;
+        playerOne::Student student2;
         int x, y;
         cout << "Start\n";
 
@@ -410,7 +422,7 @@ class Student{
             }
             
             while(status==Continue){
-#ifdef DEBUG_MODE
+#ifdef DEBUG_MAIN
                 int debugtmp;
                 cout << "Record : \n";
                 for(int i=0; i<5; i++){

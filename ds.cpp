@@ -1,8 +1,8 @@
-
-#include <bits/stdc++.h>
+/*
+#incl/ude <bits/stdc++.h>
 using namespace std;
 enum Color{White, Blue, Red, Black};
-
+*/
 class Node{
     public:
         Node(int a[5][6], Color c[5][6], Color in): parent(NULL), input(in), bestx(-1), besty(-1), bestvalue(-10001) {
@@ -171,10 +171,15 @@ class Node{
                     Record[x][y]++; color[x][y] = input;
                     if(Record[x][y]==Max[x][y]){
                         status = Continue;
-                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-1)) if(color[x][y-1]==Blue) value += 50; else value -= 30;
-                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-1)) if(color[x][y+1]==Blue) value += 50; else value -= 30;
-                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-1)) if(color[x-1][y]==Blue) value += 50; else value -= 30;
-                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-1)) if(color[x-1][y]==Blue) value += 50; else value -= 30;
+                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-2)) if(color[x][y-1]==Blue) value += 50;
+                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-2)) if(color[x][y+1]==Blue) value += 50;
+                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-2)) if(color[x-1][y]==Blue) value += 50;
+                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-2)) if(color[x-1][y]==Blue) value += 50;
+
+                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-1)) if(color[x][y-1]==Blue) value += 30; else value -= 30;
+                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-1)) if(color[x][y+1]==Blue) value += 30; else value -= 30;
+                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-1)) if(color[x-1][y]==Blue) value += 30; else value -= 30;
+                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-1)) if(color[x-1][y]==Blue) value += 30; else value -= 30;
                     } else {
                         if(y>0) {
                             if(Record[x][y-1]==(Max[x][y-1]-1)) {
