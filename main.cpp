@@ -1,7 +1,9 @@
     #include <bits/stdc++.h>
-    //#define DEBUG_MODE
+    #define DEBUG_MODE
     //#define SIM_MODE
-    //#define CHECK
+    #define CHECK
+    #define DEBUG_MAIN
+    
     using namespace std;
 
     enum PlayStatus{
@@ -44,6 +46,12 @@ class Node{
                 for(int j=0; j<6; j++){
                     if(value[i][j]>bestvalue){
                         bestvalue = value[i][j]; bestx = i; besty = j;
+                    } else if(value[i][j]==bestvalue){
+                        clock_t t = clock();
+                        int tmp = t % 2;
+                        if(tmp==1) {
+                            bestvalue = value[i][j]; bestx = i; besty = j;
+                        }
                     }
                 }
             }
@@ -57,6 +65,7 @@ class Node{
                 }
             }
             int value = 0;
+            
             if(input==Blue){
                 if(color[x][y]==Blue || color[x][y]==White) {
                     Record[x][y]++; color[x][y] = input;
@@ -186,120 +195,16 @@ class Node{
                 }
             } else {
                 if(color[x][y]==Red || color[x][y]==White) {
-                    if(Max[x][y]==2 && color[x][y]==White) value += 50;
-                    if(y>0) if(color[x][y-1]==White) if(color[x][y]==White) value += 10; else value += 5;
-                    if(y<5) if(color[x][y+1]==White) if(color[x][y]==White) value += 10; else value += 5;
-                    if(x>0) if(color[x-1][y]==White) if(color[x][y]==White) value += 10; else value += 5;
-                    if(x<4) if(color[x-1][y]==White) if(color[x][y]==White) value += 10; else value += 5;
                     Record[x][y]++; color[x][y] = input;
+                    {
+                        int i=x, j=y;
+                        if(i>0) if(color[i-1][j]==Black) value--; 
+                        if(i<4) if(color[i+1][j]==Black) value--; 
+                        if(j>0) if(color[i][j-1]==Black) value--; 
+                        if(j<5) if(color[i][j+1]==Black) value--; 
+                    }
                     if(Record[x][y]==Max[x][y]){
                         status = Continue;
-                        if(y>0) {
-                            if(Record[x][y-1]==(Max[x][y-1]-2)) {
-                                if(color[x][y-1]==Blue) value += 50;
-                                if(y>1) if(color[x][y-2]==Red && Record[x][y-2]==(Max[x][y-2]-1)) value -= 50;
-                                if(x>0) if(color[x-1][y-1]==Red && Record[x-1][y-1]==(Max[x-1][y-1]-1)) value -= 50;
-                                if(x<4) if(color[x+1][y-1]==Red && Record[x+1][y-1]==(Max[x+1][y-1]-1)) value -= 50;
-                            }
-                        }
-                        if(y<5) {
-                            if(Record[x][y+1]==(Max[x][y+1]-2)) {
-                                if(color[x][y+1]==Blue) value += 50;
-                                if(y<4) if(color[x][y+2]==Red && Record[x][y+2]==(Max[x][y+2]-1)) value -= 50;
-                                if(x>0) if(color[x-1][y+1]==Red && Record[x-1][y+1]==(Max[x-1][y+1]-1)) value -= 50;
-                                if(x<4) if(color[x+1][y+1]==Red && Record[x+1][y+1]==(Max[x+1][y+1]-1)) value -= 50;
-                            }
-                        }
-                        if(x>0) {
-                            if(Record[x-1][y]==(Max[x-1][y]-2)) {
-                                if(color[x-1][y]==Blue) value += 50;
-                                if(x>1) if(color[x-2][y]==Red && Record[x-2][y]==(Max[x-2][y]-1)) value -= 50;
-                                if(y>0) if(color[x-1][y-1]==Red && Record[x-1][y-1]==(Max[x-1][y-1]-1)) value -= 50;
-                                if(y<5) if(color[x-1][y+1]==Red && Record[x-1][y+1]==(Max[x-1][y+1]-1)) value -= 50;
-                            }
-                        }
-                        if(x<4) {
-                            if(Record[x+1][y]==(Max[x+1][y]-2)) {
-                                if(color[x-1][y]==Blue) value += 50;
-                                if(x<3) if(color[x+2][y]==Red && Record[x+2][y]==(Max[x+2][y]-1)) value -= 50;
-                                if(y>0) if(color[x+1][y-1]==Red && Record[x+1][y-1]==(Max[x+1][y-1]-1)) value -= 50;
-                                if(y<5) if(color[x+1][y+1]==Red && Record[x+1][y+1]==(Max[x+1][y+1]-1)) value -= 50;
-                            }
-                        }
-
-                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-1)) if(color[x][y-1]==Blue) value += 500; else value -= 50;
-                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-1)) if(color[x][y+1]==Blue) value += 500; else value -= 50;
-                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-1)) if(color[x-1][y]==Blue) value += 500; else value -= 50;
-                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-1)) if(color[x-1][y]==Blue) value += 500; else value -= 50;
-                    } else {
-                        if(y>0) {
-                            if(Record[x][y-1]==(Max[x][y-1]-1)) {
-                                if(Record[x][y]==(Max[x][y]-1)){
-                                    if(color[x][y-1]==Red) value += 20;
-                                    else value -= 50;
-                                } else if(Record[x][y]==(Max[x][y]-2)){
-                                    if(color[x][y-1]==Red) value += 20;
-                                    else value -= 20;
-                                } else {
-                                    if(color[x][y-1]==Red) value += 10;
-                                    else value -= 10;
-                                }
-                            } else {
-                                if(color[x][y-1]==Red) value += Record[x][y-1];
-                                else value -= Record[x][y-1];
-                            }
-                        }
-                        if(y<5) {
-                            if(Record[x][y+1]==(Max[x][y+1]-1)) {
-                                if(Record[x][y]==(Max[x][y]-1)){
-                                    if(color[x][y+1]==Red) value += 20;
-                                    else value -= 50;
-                                } else if(Record[x][y]==(Max[x][y]-2)){
-                                    if(color[x][y+1]==Red) value += 20;
-                                    else value -= 20;
-                                } else {
-                                    if(color[x][y+1]==Red) value += 10;
-                                    else value -= 10;
-                                }
-                            } else {
-                                if(color[x][y+1]==Red) value += Record[x][y+1];
-                                else value -= Record[x][y+1];
-                            }
-                        }
-                        if(x>0) {
-                            if(Record[x-1][y]==(Max[x-1][y]-1)) {
-                                if(Record[x][y]==(Max[x][y]-1)){
-                                    if(color[x-1][y]==Red) value += 20;
-                                    else value -= 50;
-                                } else if(Record[x][y]==(Max[x][y]-2)){
-                                    if(color[x-1][y]==Red) value += 20;
-                                    else value -= 20;
-                                } else {
-                                    if(color[x-1][y]==Red) value += 10;
-                                    else value -= 10;
-                                }
-                            } else {
-                                if(color[x-1][y]==Red) value += Record[x-1][y];
-                                else value -= Record[x-1][y];
-                            }
-                        }
-                        if(x<4) {
-                            if(Record[x+1][y]==(Max[x+1][y]-1)) {
-                                if(Record[x][y]==(Max[x][y]-1)){
-                                    if(color[x+1][y]==Red) value += 20;
-                                    else value -= 50;
-                                } else if(Record[x][y]==(Max[x][y]-2)){
-                                    if(color[x+1][y]==Red) value += 20;
-                                    else value -= 20;
-                                } else {
-                                    if(color[x+1][y]==Red) value += 10;
-                                    else value -= 10;
-                                }
-                            } else {
-                                if(color[x+1][y]==Red) value += Record[x+1][y];
-                                else value -= Record[x+1][y];
-                            }
-                        }
                     }
                 } else {
                     return -999;
@@ -353,13 +258,36 @@ class Node{
                 for(int i=0; i<5; i++){
                     for(int j=0; j<6; j++){
                         if(color[i][j]==Red){
-                            value++;
-                            if(Record[i][j]==(Max[i][j]-1)) value += (5-Max[i][j]);
-                        } /*else if(color[i][j]==Blue){
-                            value--;
-                            if(Record[i][j]==(Max[i][j]-1)) value -= (5-Max[i][j]);
-                        } */else if(color[i][j]==White){
-                            value++;
+                            value += Record[i][j];
+                            bool flag = false;
+
+                            if(i>0) if(color[i-1][j]==Red && Record[i-1][j]==(Max[i-1][j]-1)) flag = true;
+                            if(i<4) if(color[i+1][j]==Red && Record[i+1][j]==(Max[i+1][j]-1)) flag = true;
+                            if(j>0) if(color[i][j-1]==Red && Record[i][j-1]==(Max[i][j-1]-1)) flag = true;
+                            if(j<5) if(color[i][j+1]==Red && Record[i][j+1]==(Max[i][j+1]-1)) flag = true;
+                            if(flag && (Record[i][j]==(Max[i][j]-1))) value--;
+                            
+                            flag = true;
+                            if(i>0) if(color[i-1][j]==Blue && Record[i-1][j]==(Max[i-1][j]-1)) value -= (5-Max[i-1][j]);
+                            if(i>0) if(color[i-1][j]==Blue && Record[i-1][j]==(Max[i-1][j]-1)) flag = false;
+                            if(i<4) if(color[i+1][j]==Blue && Record[i+1][j]==(Max[i+1][j]-1)) value -= (5-Max[i+1][j]);
+                            if(i<4) if(color[i+1][j]==Blue && Record[i+1][j]==(Max[i+1][j]-1)) flag = false;
+                            if(j>0) if(color[i][j-1]==Blue && Record[i][j-1]==(Max[i][j-1]-1)) value -= (5-Max[i][j-1]);
+                            if(j>0) if(color[i][j-1]==Blue && Record[i][j-1]==(Max[i][j-1]-1)) flag = false;
+                            if(j<5) if(color[i][j+1]==Blue && Record[i][j+1]==(Max[i][j+1]-1)) value -= (5-Max[i][j+1]);
+                            if(j<5) if(color[i][j+1]==Blue && Record[i][j+1]==(Max[i][j+1]-1)) flag = false;
+
+                            if(i>0) if(color[i-1][j]==Blue && Record[i-1][j]==(Max[i-1][j]-2) && Record[i][j]==(Max[i][j]-1)) value += (5-Max[i-1][j]);
+                            if(i<4) if(color[i+1][j]==Blue && Record[i+1][j]==(Max[i+1][j]-2) && Record[i][j]==(Max[i][j]-1)) value += (5-Max[i+1][j]);
+                            if(j>0) if(color[i][j-1]==Blue && Record[i][j-1]==(Max[i][j-1]-2) && Record[i][j]==(Max[i][j]-1)) value += (5-Max[i][j-1]);
+                            if(j<5) if(color[i][j+1]==Blue && Record[i][j+1]==(Max[i][j+1]-2) && Record[i][j]==(Max[i][j]-1)) value += (5-Max[i][j+1]);
+
+                            if(flag){
+                                if(Max[i][j]==2) value += 3;
+                                if(Max[i][j]==3) value += 2;
+                                if(Max[i][j]==4) value += 1;
+                                if(Record[i][j]==(Max[i][j]-1)) value += 2;
+                            }
                         }
                     }
                 }
@@ -367,8 +295,14 @@ class Node{
             return value;
             
         }
+#ifndef CHECK
         int Bestx(){bestvalue = -10001; return bestx;}
         int Besty(){bestvalue = -10001; return besty;}
+#endif
+#ifdef CHECK
+        int Bestx(){cin >> bestx; return --bestx;}
+        int Besty(){cin >> besty; return --besty;}
+#endif
     private:
         Node* parent;
         vector<Node*> child;
@@ -469,19 +403,6 @@ class Student{
             }
             
             while(status==Continue){
-
-#ifdef DEBUG_MAIN
-                int debugtmp;
-                cout << "Record : \n";
-                for(int i=0; i<5; i++){
-                    for(int j=0; j<6; j++){
-                        cout << Record[i][j] << ' ';
-                    }
-                    cout << '\n';
-                }
-                cout << "x : " << x+1 << " y : " << y+1 << '\n';
-                cin >> debugtmp;
-#endif
                 Record[x][y] = -1; color[x][y] = Black;
 
                 if(y>0){
@@ -516,6 +437,18 @@ class Student{
                 }
             }
 
+#ifdef DEBUG_MAIN
+                
+                cout << "Record : \n";
+                for(int i=0; i<5; i++){
+                    for(int j=0; j<6; j++){
+                        cout << Record[i][j] << ' ';
+                    }
+                    cout << '\n';
+                }
+                cout << "x : " << x+1 << " y : " << y+1 << '\n';
+#endif
+
             for(x=0; x<5; x++){
                 for(y=0; y<6; y++){
                     if(color[x][y]==White || color[x][y]==Red){
@@ -541,18 +474,6 @@ class Student{
             }
             
             while(status==Continue){
-#ifdef DEBUG_MAIN
-                int debugtmp;
-                cout << "Record : \n";
-                for(int i=0; i<5; i++){
-                    for(int j=0; j<6; j++){
-                        cout << Record[i][j] << ' ';
-                    }
-                    cout << '\n';
-                }
-                cout << "x : " << x+1 << " y : " << y+1 << '\n';
-                cin >> debugtmp;
-#endif
                 Record[x][y] = -1; color[x][y] = Black;
 
                 if(y>0){
@@ -588,7 +509,18 @@ class Student{
                 
             }
 
-            status = Terminate;
+#ifdef DEBUG_MAIN
+                
+                cout << "Record : \n";
+                for(int i=0; i<5; i++){
+                    for(int j=0; j<6; j++){
+                        cout << Record[i][j] << ' ';
+                    }
+                    cout << '\n';
+                }
+                cout << "x : " << x+1 << " y : " << y+1 << '\n';
+#endif
+
             for(x=0; x<5; x++){
                 for(y=0; y<6; y++){
                     if(color[x][y]==White || color[x][y]==Blue){
