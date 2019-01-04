@@ -1,6 +1,6 @@
     #include <bits/stdc++.h>
     //#define DEBUG_MODE
-    #define SIM_MODE
+    //#define SIM_MODE
     //#define CHECK
     //#define DEBUG_MAIN
     
@@ -149,12 +149,12 @@ class Node{
                             if(j>0) if(color[i][j-1]==Red && Record[i][j-1]==(Max[i][j-1]-1)) flag = false;
                             if(j<5) if(color[i][j+1]==Red && Record[i][j+1]==(Max[i][j+1]-1)) value -= (5-Max[i][j+1]);
                             if(j<5) if(color[i][j+1]==Red && Record[i][j+1]==(Max[i][j+1]-1)) flag = false;
-
+/*
                             if(i>0) if(color[i-1][j]==Red && Record[i-1][j]==(Max[i-1][j]-2) && Record[i][j]==(Max[i][j]-1)) value += (5-Max[i-1][j]);
                             if(i<4) if(color[i+1][j]==Red && Record[i+1][j]==(Max[i+1][j]-2) && Record[i][j]==(Max[i][j]-1)) value += (5-Max[i+1][j]);
                             if(j>0) if(color[i][j-1]==Red && Record[i][j-1]==(Max[i][j-1]-2) && Record[i][j]==(Max[i][j]-1)) value += (5-Max[i][j-1]);
                             if(j<5) if(color[i][j+1]==Red && Record[i][j+1]==(Max[i][j+1]-2) && Record[i][j]==(Max[i][j]-1)) value += (5-Max[i][j+1]);
-
+*/
                             if(flag){
                                 if(Max[i][j]==2) value += 3;
                                 if(Max[i][j]==3) value += 2;
@@ -292,6 +292,18 @@ class Student{
         void makeMove(int Record[5][6], int Max[5][6], Color color[5][6], Color inputColor){
             // Your Code
             root = new Node(Record, color, inputColor);
+            clock_t t;
+            t = clock();
+
+            if(t%2){
+                int n, i, j;
+                n = t % 7;
+                n %= 2;
+                i = t % 5;
+                j = t % 6;
+                if(n==0) cout << "Player One : (" << i << ',' << j << ")\n";
+                else cout << "Player Two : (" << i << ',' << j << ")\n";
+            }
         }
         // Any Code You Want to Add
         int getX(){
