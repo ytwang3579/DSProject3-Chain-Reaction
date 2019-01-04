@@ -168,22 +168,58 @@ class Node{
                 }
             } else {
                 if(color[x][y]==Red || color[x][y]==White) {
+                    if(Max[x][y]==2 && color[x][y]==White) value += 50;
+                    if(y>0) if(color[x][y-1]==White) if(color[x][y]==White) value += 10; else value += 5;
+                    if(y<5) if(color[x][y+1]==White) if(color[x][y]==White) value += 10; else value += 5;
+                    if(x>0) if(color[x-1][y]==White) if(color[x][y]==White) value += 10; else value += 5;
+                    if(x<4) if(color[x-1][y]==White) if(color[x][y]==White) value += 10; else value += 5;
                     Record[x][y]++; color[x][y] = input;
                     if(Record[x][y]==Max[x][y]){
                         status = Continue;
-                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-2)) if(color[x][y-1]==Blue) value += 50;
-                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-2)) if(color[x][y+1]==Blue) value += 50;
-                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-2)) if(color[x-1][y]==Blue) value += 50;
-                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-2)) if(color[x-1][y]==Blue) value += 50;
+                        if(y>0) {
+                            if(Record[x][y-1]==(Max[x][y-1]-2)) {
+                                if(color[x][y-1]==Blue) value += 50;
+                                if(y>1) if(color[x][y-2]==Red && Record[x][y-2]==(Max[x][y-2]-1)) value -= 50;
+                                if(x>0) if(color[x-1][y-1]==Red && Record[x-1][y-1]==(Max[x-1][y-1]-1)) value -= 50;
+                                if(x<4) if(color[x+1][y-1]==Red && Record[x+1][y-1]==(Max[x+1][y-1]-1)) value -= 50;
+                            }
+                        }
+                        if(y<5) {
+                            if(Record[x][y+1]==(Max[x][y+1]-2)) {
+                                if(color[x][y+1]==Blue) value += 50;
+                                if(y<4) if(color[x][y+2]==Red && Record[x][y+2]==(Max[x][y+2]-1)) value -= 50;
+                                if(x>0) if(color[x-1][y+1]==Red && Record[x-1][y+1]==(Max[x-1][y+1]-1)) value -= 50;
+                                if(x<4) if(color[x+1][y+1]==Red && Record[x+1][y+1]==(Max[x+1][y+1]-1)) value -= 50;
+                            }
+                        }
+                        if(x>0) {
+                            if(Record[x-1][y]==(Max[x-1][y]-2)) {
+                                if(color[x-1][y]==Blue) value += 50;
+                                if(x>1) if(color[x-2][y]==Red && Record[x-2][y]==(Max[x-2][y]-1)) value -= 50;
+                                if(y>0) if(color[x-1][y-1]==Red && Record[x-1][y-1]==(Max[x-1][y-1]-1)) value -= 50;
+                                if(y<5) if(color[x-1][y+1]==Red && Record[x-1][y+1]==(Max[x-1][y+1]-1)) value -= 50;
+                            }
+                        }
+                        if(x<4) {
+                            if(Record[x+1][y]==(Max[x+1][y]-2)) {
+                                if(color[x-1][y]==Blue) value += 50;
+                                if(x<3) if(color[x+2][y]==Red && Record[x+2][y]==(Max[x+2][y]-1)) value -= 50;
+                                if(y>0) if(color[x+1][y-1]==Red && Record[x+1][y-1]==(Max[x+1][y-1]-1)) value -= 50;
+                                if(y<5) if(color[x+1][y+1]==Red && Record[x+1][y+1]==(Max[x+1][y+1]-1)) value -= 50;
+                            }
+                        }
 
-                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-1)) if(color[x][y-1]==Blue) value += 30; else value -= 30;
-                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-1)) if(color[x][y+1]==Blue) value += 30; else value -= 30;
-                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-1)) if(color[x-1][y]==Blue) value += 30; else value -= 30;
-                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-1)) if(color[x-1][y]==Blue) value += 30; else value -= 30;
+                        if(y>0) if(Record[x][y-1]==(Max[x][y-1]-1)) if(color[x][y-1]==Blue) value += 500; else value -= 50;
+                        if(y<5) if(Record[x][y+1]==(Max[x][y+1]-1)) if(color[x][y+1]==Blue) value += 500; else value -= 50;
+                        if(x>0) if(Record[x-1][y]==(Max[x-1][y]-1)) if(color[x-1][y]==Blue) value += 500; else value -= 50;
+                        if(x<4) if(Record[x+1][y]==(Max[x+1][y]-1)) if(color[x-1][y]==Blue) value += 500; else value -= 50;
                     } else {
                         if(y>0) {
                             if(Record[x][y-1]==(Max[x][y-1]-1)) {
                                 if(Record[x][y]==(Max[x][y]-1)){
+                                    if(color[x][y-1]==Red) value += 20;
+                                    else value -= 50;
+                                } else if(Record[x][y]==(Max[x][y]-2)){
                                     if(color[x][y-1]==Red) value += 20;
                                     else value -= 20;
                                 } else {
@@ -199,6 +235,9 @@ class Node{
                             if(Record[x][y+1]==(Max[x][y+1]-1)) {
                                 if(Record[x][y]==(Max[x][y]-1)){
                                     if(color[x][y+1]==Red) value += 20;
+                                    else value -= 50;
+                                } else if(Record[x][y]==(Max[x][y]-2)){
+                                    if(color[x][y+1]==Red) value += 20;
                                     else value -= 20;
                                 } else {
                                     if(color[x][y+1]==Red) value += 10;
@@ -213,6 +252,9 @@ class Node{
                             if(Record[x-1][y]==(Max[x-1][y]-1)) {
                                 if(Record[x][y]==(Max[x][y]-1)){
                                     if(color[x-1][y]==Red) value += 20;
+                                    else value -= 50;
+                                } else if(Record[x][y]==(Max[x][y]-2)){
+                                    if(color[x-1][y]==Red) value += 20;
                                     else value -= 20;
                                 } else {
                                     if(color[x-1][y]==Red) value += 10;
@@ -226,6 +268,9 @@ class Node{
                         if(x<4) {
                             if(Record[x+1][y]==(Max[x+1][y]-1)) {
                                 if(Record[x][y]==(Max[x][y]-1)){
+                                    if(color[x+1][y]==Red) value += 20;
+                                    else value -= 50;
+                                } else if(Record[x][y]==(Max[x][y]-2)){
                                     if(color[x+1][y]==Red) value += 20;
                                     else value -= 20;
                                 } else {
@@ -291,10 +336,12 @@ class Node{
                     for(int j=0; j<6; j++){
                         if(color[i][j]==Red){
                             value++;
-                            if(Record[i][j]==(Max[i][j]-1)) value++;
-                        } else if(color[i][j]==Blue){
+                            if(Record[i][j]==(Max[i][j]-1)) value += (5-Max[i][j]);
+                        } /*else if(color[i][j]==Blue){
                             value--;
-                            if(Record[i][j]==(Max[i][j]-1)) value--;
+                            if(Record[i][j]==(Max[i][j]-1)) value -= (5-Max[i][j]);
+                        } */else if(color[i][j]==White){
+                            value++;
                         }
                     }
                 }
